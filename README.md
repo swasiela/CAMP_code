@@ -17,13 +17,13 @@ This project is based on **[OMPL](https://github.com/ompl/ompl)**.
 
 ### Install
 
-First clone the project : ```git clone https://gitlab.laas.fr/CAMP/code.git``` and rename the *code* folder into *CAMP*. This step is not optional, as most paths in the code are relative to the string *CAMP*.
+First clone the project : ```git clone https://github.com/swasiela/CAMP_code.git``` and rename the *code* folder into *CAMP*. This step is not optional, as most paths in the code are relative to the string *CAMP*.
 
 Then:
 
 - Install all required system dependencies from scratch. See **[install](INSTALL.md)**.
 
-- **OR** *incoming container*.
+- **OR** use **[apptainer](https://github.com/swasiela/CAMP_apptainer)**. 
 
 ### Building the project
 
