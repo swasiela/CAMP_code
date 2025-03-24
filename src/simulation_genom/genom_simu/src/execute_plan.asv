@@ -1,0 +1,153 @@
+%%%%%%%%%%%%%%%%%%%%% SIMPLE_MOTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines the experiment (real or simulated) to be performed by the aerial
+% platform.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clc
+
+log_exec = true;
+
+disp('*** EXECUTE THE PLANNED TRAJECTORY ***')
+
+%% CALIBRATION
+disp('*** setting zeros ***')
+% gs.rc.set_zero(10);
+% gs.rc.set_zero_velocity(10);
+
+%% INITIALIAZE
+% prop_vel = 60;
+% p_vel = zeros(8,1);
+% p_vel(1) = prop_vel;
+% p_vel(2) = prop_vel;
+% p_vel(3) = prop_vel;
+% p_vel(4) = prop_vel;
+xmin = -1.0;
+xmax = 3.0;
+ymin = -1.5;
+ymax = 1.5;
+zmin = 0.0;
+zmax = 2.5;
+yawmin = -3.1415;
+yawmax = 3.1415;
+
+vmax = 5.0;
+amax = 1.5;
+jmax = 15.0;
+smax = 30.0;
+
+wmax = 0.5;
+dwmax = 0.25;
+ddwmax = 8.0;
+dddwmax = 16.0;
+
+gs.man.set_bounds(xmin,xmax,ymin,ymax,zmin,zmax,yawmin,yawmax);
+gs.man.set_velocity_limit(vmax,wmax);
+gs.man.set_acceleration_limit(amax,dwmax);
+gs.man.set_jerk_limit(jmax,ddwmax);
+gs.man.set_snap_limit(smax,dddwmax);
+
+%% hold magnet
+if param.magnet == 1
+    gs.arduio.out1(5,0); 
+    gs.arduio.out1(6,1); 
+end
+
+%% START
+disp('rotorcraft.start()');
+disp('PAUSE - Press ENTER');
+pause;
+% Spin propellers at the lowest velocity
+gs.rc.start('-a');
+
+% gs.nhfc.set_current_position();
+
+%% SERVO
+disp('rotorcraft.servo()');
+disp('PAUSE - Press ENTER');
+pause;
+% Control the propellers according to the given velocities
+% gs.rc.set_velocity(p_vel);
+gs.rc.servo('-a');
+
+%% TAKE OFF
+disp('PAUSE - Press ENTER to take off');
+pause;
+% Track a desired position
+gs.nhfc.servo('-a');
+% Set initial planning position to current one
+gs.man.set_current_state();
+% Vertical take-off from current state
+height = 0.4;
+gs.man.take_off('-a', height, 3); % activity, height, duration (0: min time)
+
+
+%% Send to initial state
+disp('PAUSE - Press ENTER to send drone to initial state');
+pause;
+getRobotState;
+gs.man.waypoint(-1,0,1.0,0,0, 0, 0, 0, 0, 0, 0, 0);
+
+%% Execute the trajectory
+disp('PAUSE - Press ENTER to execute');
+pause;
+
+file_log = append(uav.logs.traj_dir,'trajectory.log');
+getRobotState;
+
+if log_exec
+    gs.man.log(append(uav.logs.dir,'man.log'), 1);
+    gs.pom.log_state(append(uav.logs.dir,'pom.log'), 5);
+    gs.pom.log_measurements(append(uav.logs.dir,'pom_meas.log'));
+    gs.nhfc.log(append(uav.logs.dir,'nhfc.log'), 5);
+    gs.rc.log(append(uav.logs.dir,'rc.log'), 5);
+end
+
+gs.man.replay(file_log);
+
+%% neutral magnet
+if param.magnet == 1
+    gs.arduio.out1(5,0); 
+    gs.arduio.out1(6,0); 
+end
+
+%% release magnet
+if param.magnet == 1
+    gs.arduio.out1(5,1); 
+    gs.arduio.out1(6,0); 
+    disp('RELEASED !');
+end
+
+gs.man.stop();
+% Stop the log
+if log_exec
+    gs.man.log_stop();
+    gs.pom.log_stop();
+    gs.nhfc.log_stop();
+    gs.rc.log_stop();
+end
+
+disp('Execution done !');
+
+%% Send to landing state
+disp('PAUSE - Press ENTER to send drone to landing state');
+pause;
+getRobotState;
+gs.man.waypoint(2,-0.2,1.0,0,0, 0, 0, 0, 0, 0, 0, 0);
+
+%% Land
+disp('PAUSE - Press ENTER to land');
+pause;
+% Vertical land from current state
+gs.man.take_off('-a', .35, 0);
+
+%% STOP
+disp('rotorcraft.stop()');
+disp('PAUSE - Press ENTER');
+pause;
+
+% Stop all propellers
+gs.rc.stop();
+% Stop tracking a desired position
+gs.nhfc.stop();
+% Cancel any motion and bring the velocity to zero
+gs.man.stop();

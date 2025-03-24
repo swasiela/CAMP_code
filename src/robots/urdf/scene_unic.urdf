@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<robot name="world">
+  <link name="floor">
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robots/meshes/env/ddr_env2.obj" scale="1. 1. 1."/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+	 	<mesh filename="package://robots/meshes/env/ddr_env2.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>

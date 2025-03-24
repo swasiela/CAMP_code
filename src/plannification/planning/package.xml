@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>planning</name>
+  <version>1.0.0</version>
+  <description>The planning manager package</description>
+
+  <author email="swasiela@laas.fr">Simon Wasiela</author>
+  <maintainer email="swasiela@laas.fr">Simon Wasiela</maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>learning_sensitivity</build_depend>
+  <build_depend>ompl</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+  <build_depend>eigen_conversions</build_depend>
+  <build_depend>kinosplines</build_depend>
+  <build_depend>mdt_tools</build_depend>
+  <build_depend>services_msgs</build_depend>
+  <build_depend>robots</build_depend>
+  <build_depend>utils</build_depend>
+  
+  <exec_depend>learning_sensitivity</exec_depend>
+  <exec_depend>ompl</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>eigen_conversions</exec_depend>
+  <exec_depend>kinosplines</exec_depend>
+  <exec_depend>mdt_tools</exec_depend>
+  <exec_depend>services_msgs</exec_depend>
+  <exec_depend>robots</exec_depend>
+  <exec_depend>utils</exec_depend>
+
+</package>

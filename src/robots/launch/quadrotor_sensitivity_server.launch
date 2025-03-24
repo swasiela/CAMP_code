@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="quadrotor_sensitivity_server" pkg="robots" type="quadrotor_sensitivity_server.py" respawn="false" output="screen"/>
+
+</launch>

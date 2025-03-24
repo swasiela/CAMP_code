@@ -1,0 +1,925 @@
+//
+// Copyright (c) 2015-2023 LAAS/CNRS
+// All rights reserved.
+//
+// Redistribution and use  in source  and binary  forms,  with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//   1. Redistributions of  source  code must retain the  above copyright
+//      notice and this list of conditions.
+//   2. Redistributions in binary form must reproduce the above copyright
+//      notice and  this list of  conditions in the  documentation and/or
+//      other materials provided with the distribution.
+//
+//					Anthony Mallet on Tue Aug 11 2015
+//
+
+
+// This file was generated from nhfc.gen by the skeleton
+// template. Manual changes should be preserved, although they should
+// rather be added to the "doc" attributes of the genom objects defined in
+// nhfc.gen.
+
+= nhfc component
+openrobots@laas.fr
+2.3
+:toc: left
+
+// fix default asciidoctor stylesheet issue #2407 and add hr clear rule
+ifdef::backend-html5[]
+[pass]
+++++
+<link rel="stylesheet" href="data:text/css,p{font-size: inherit !important}" >
+<link rel="stylesheet" href="data:text/css,hr{clear: both}" >
+++++
+endif::[]
+
+
+
+== Ports
+
+
+[[rotor_input]]
+=== rotor_input (out)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_rotorcraft::input` `rotor_input`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `enum ::or_rotorcraft::control_type` `control` ∈ { `velocity`, `throttle` }
+ ** `sequence< double, 8 >` `desired`
+
+|===
+
+'''
+
+[[rotor_measure]]
+=== rotor_measure (in)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_rotorcraft::output` `rotor_measure`
+ ** `sequence< struct ::or_rotorcraft::rotor_state, 8 >` `rotor`
+ *** `struct ::or::time::ts` `ts`
+ **** `long` `sec`
+ **** `long` `nsec`
+ *** `boolean` `emerg`
+ *** `boolean` `spinning`
+ *** `boolean` `starting`
+ *** `boolean` `disabled`
+ *** `double` `velocity`
+ *** `double` `throttle`
+ *** `double` `consumption`
+ *** `double` `energy_level`
+
+|===
+
+'''
+
+[[state]]
+=== state (in)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_pose_estimator::state` `state`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::pos_cov >` `pos_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::att_cov >` `att_cov`
+ *** `double` `cov[10]`
+ ** `optional< struct ::or::t3d::att_pos_cov >` `att_pos_cov`
+ *** `double` `cov[12]`
+ ** `optional< struct ::or::t3d::vel_cov >` `vel_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::avel_cov >` `avel_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::acc_cov >` `acc_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::aacc_cov >` `aacc_cov`
+ *** `double` `cov[6]`
+
+|===
+
+'''
+
+[[reference]]
+=== reference (in)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_rigid_body::state` `reference`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::jerk >` `jerk`
+ *** `double` `jx`
+ *** `double` `jy`
+ *** `double` `jz`
+ ** `optional< struct ::or::t3d::snap >` `snap`
+ *** `double` `sx`
+ *** `double` `sy`
+ *** `double` `sz`
+
+|===
+
+'''
+
+[[external_wrench]]
+=== external_wrench (out)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_wrench_estimator::state` `external_wrench`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::rb3d::force >` `force`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::rb3d::force_cov >` `force_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::rb3d::torque >` `torque`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::rb3d::torque_cov >` `torque_cov`
+ *** `double` `cov[6]`
+
+|===
+
+'''
+
+== Services
+
+[[set_saturation]]
+=== set_saturation (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `struct ::nhfc::ids::servo_s::sat_s` `sat`
+ ** `double` `x`
+ ** `double` `v`
+ ** `double` `ix`
+
+|===
+
+'''
+
+[[set_servo_gain]]
+=== set_servo_gain (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `struct ::nhfc::ids::servo_s::gain_s` `gain`
+ ** `double` `Kpxy`
+ ** `double` `Kpz`
+ ** `double` `Kqxy`
+ ** `double` `Kqz`
+ ** `double` `Kvxy`
+ ** `double` `Kvz`
+ ** `double` `Kwxy`
+ ** `double` `Kwz`
+ ** `double` `Kixy`
+ ** `double` `Kiz`
+
+|===
+
+'''
+
+[[set_control_mode]]
+=== set_control_mode (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `enum ::nhfc::attitude_control_mode` `att_mode` (default `"::nhfc::tilt_prioritized"`) Attitude tracking control law ∈ { `full_attitude`, `tilt_prioritized` }
+
+|===
+
+Select attitude tracking control law.
+
+With `tilt_prioritized`, attitude error is split into a
+reduced attitude error, which describes the misalignment of
+the thrust direction, and a yaw error, which describes the
+heading orientation error. This is the default.
+
+With `full_attitude`, a conventional controller, based on the full
+attitude error, is used.
+
+'''
+
+[[set_wlimit]]
+=== set_wlimit (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `wmin` Minimum propeller velocity
+
+ * `double` `wmax` Maximum propeller velocity
+
+|===
+
+'''
+
+[[set_mass]]
+=== set_mass (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `mass`
+
+|===
+
+'''
+
+[[set_geom]]
+=== set_geom (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `mass` Mass (kg)
+
+ * `double` `G[48]` Mapping from propellers velocity^2 to wrench
+
+ * `double` `J[9]` Inertia matrix
+
+|===
+
+Set mass, allocation matrix and inertia tensor.
+
+This is a generic function for setting the geometric parameters of
+the controlled robot. See <<set_gtmrp_geom>> for a specialized
+function for tilted multi rotors robots.
+
+'''
+
+[[set_gtmrp_geom]]
+=== set_gtmrp_geom (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `unsigned short` `rotors` (default `"4"`) Number of rotors
+
+ * `double` `cx` (default `"0"`) X position of center of rotors wrt center of mass (m)
+
+ * `double` `cy` (default `"0"`) Y position of center of rotors wrt center of mass (m)
+
+ * `double` `cz` (default `"0"`) Z position of center of rotors wrt center of mass (m)
+
+ * `double` `armlen` (default `"0.23"`) Distance of rotors to the center (m)
+
+ * `double` `mass` (default `"1.28"`) Total mass (kg)
+
+ * `double` `mbodyw` (default `"0.11"`) Main mass body width (m)
+
+ * `double` `mbodyh` (default `"0.17"`) Main mass body height (m)
+
+ * `double` `mmotor` (default `"0.07"`) Motor mass (kg)
+
+ * `double` `rx` (default `"0"`) X rotation of the first rotor thrust vector (deg)
+
+ * `double` `ry` (default `"0"`) Y rotation of the first rotor thrust vector (deg)
+
+ * `short` `rz` (default `"1"`) Z spin direction of the first rotor (1: ccw, -1: cw)
+
+ * `double` `cf` (default `"0.00065"`) Propeller thrust coefficient (N.s²)
+
+ * `double` `ct` (default `"1e-05"`) Propeller torque coefficient (N.m.s²)
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_inval`
+ ** `string<128>` `what`
+
+|===
+
+Compute allocation matrix and inertia tensor for tilt rotors robots.
+
+Generically Tilted Multi-Rotor Platforms (GTMRP) are made of a set
+of rotors evenly distributed in a horizontal plane. The rotors are
+tilted around an axis lying in the plane, all by the same angle but
+with alternating signs on the X axis. The spinning direction is also
+alternating.
+
+This function is a specialization of the more generic <<set_geom>>.
+
+'''
+
+[[set_emerg]]
+=== set_emerg (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `struct ::nhfc::ids::servo_s::emerg_s` `emerg`
+ ** `double` `descent` (default `"0.1"`) Vertical acceleration for emergency descent (m/s²)
+ ** `double` `dx` (default `"0.05"`) Position uncertainty threshold (m)
+ ** `double` `dq` (default `"20"`) Angular velocity uncertainty threshold (deg/s)
+ ** `double` `dv` (default `"0.2"`) Linear velocity uncertainty threshold (m/s)
+ ** `double` `dw`
+
+|===
+
+Set thresholds for emergency descent.
+
+`dx`, `dq`, `dv` and `dw` represent the maximum uncertainty tolerated
+in the input <<state>> for position (`dx`), orientation (`dq`),
+linear velocity (`dv`) and angular velocity (`dw`), measured as 3
+times the standard deviation.
+By default, `dx` is 5cm, `dq` is 5⁰, `dv` is 20cm/s and `dw` 20⁰/s.
+Beyond that threshold, an emergency descent is started.
+
+As long as the emergency descent is active, the position error or
+linear velocity error are cancelled (i.e. the desired roll and pitch
+are set to 0) and a vertical acceleration of `descent` (by default
+-0.1 m/s²) is requested. The descent is based on the mass only,
+with no feedback, as the state is considered invalid. If the
+orientation is invalid in the <<state>>, then no control on the
+attitude is possible and the stability is not guaranteed ...
+
+'''
+
+[[set_wo_gains]]
+=== set_wo_gains (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `K[6]` Wrench observer gains
+
+|===
+
+'''
+
+[[set_af_parameters]]
+=== set_af_parameters (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `mass` Apparent mass
+
+ * `double` `B[6]` Apparent damping
+
+ * `double` `K[6]` Apparent sprinf stiffness
+
+ * `double` `J[9]` Apparent inertia matrix
+
+|===
+
+'''
+
+[[set_af_wrench]]
+=== set_af_wrench (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `struct ::or::rb3d::force` `force`
+ ** `double` `x`
+ ** `double` `y`
+ ** `double` `z`
+
+ * `struct ::or::rb3d::torque` `torque`
+ ** `double` `x`
+ ** `double` `y`
+ ** `double` `z`
+
+|===
+
+'''
+
+[[set_af_enable]]
+=== set_af_enable (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `boolean` `enable`
+
+|===
+
+'''
+
+[[get_servo_parameters]]
+=== get_servo_parameters (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::nhfc::ids::servo_s` `servo`
+ ** `struct ::nhfc::ids::servo_s::sat_s` `sat`
+ *** `double` `x`
+ *** `double` `v`
+ *** `double` `ix`
+ ** `struct ::nhfc::ids::servo_s::gain_s` `gain`
+ *** `double` `Kpxy`
+ *** `double` `Kpz`
+ *** `double` `Kqxy`
+ *** `double` `Kqz`
+ *** `double` `Kvxy`
+ *** `double` `Kvz`
+ *** `double` `Kwxy`
+ *** `double` `Kwz`
+ *** `double` `Kixy`
+ *** `double` `Kiz`
+ ** `enum ::nhfc::attitude_control_mode` `att_mode` ∈ { `full_attitude`, `tilt_prioritized` }
+ ** `double` `ramp`
+ ** `double` `scale`
+ ** `struct ::nhfc::ids::servo_s::emerg_s` `emerg`
+ *** `double` `descent`
+ *** `double` `dx`
+ *** `double` `dq`
+ *** `double` `dv`
+ *** `double` `dw`
+
+|===
+
+'''
+
+[[get_body_parameters]]
+=== get_body_parameters (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::nhfc::ids::body_s` `body`
+ ** `double` `G[48]`
+ ** `double` `iG[48]`
+ ** `double` `J[9]`
+ ** `double` `mass`
+ ** `unsigned short` `rotors`
+ ** `double` `wmin`
+ ** `double` `wmax`
+ ** `double` `thrust_min[3]`
+ ** `double` `thrust_max[3]`
+ ** `boolean` `init`
+
+|===
+
+'''
+
+[[get_reference]]
+=== get_reference (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::or_rigid_body::state` `reference`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::jerk >` `jerk`
+ *** `double` `jx`
+ *** `double` `jy`
+ *** `double` `jz`
+ ** `optional< struct ::or::t3d::snap >` `snap`
+ *** `double` `sx`
+ *** `double` `sy`
+ *** `double` `sz`
+
+|===
+
+'''
+
+[[get_wo_parameters]]
+=== get_wo_parameters (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::nhfc::ids::wo_s` `wo`
+ ** `double` `K[6]`
+ ** `double` `bias[6]`
+
+|===
+
+'''
+
+[[get_af_parameters]]
+=== get_af_parameters (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::nhfc::ids::af_s` `af`
+ ** `boolean` `enable`
+ ** `double` `mass`
+ ** `double` `B[6]`
+ ** `double` `K[6]`
+ ** `double` `J[9]`
+ ** `struct ::or::rb3d::force` `force`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `struct ::or::rb3d::torque` `torque`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+
+|===
+
+'''
+
+[[servo]]
+=== servo (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_input`
+
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * In task `<<main>>`
+  (frequency 1000.0 _Hz_)
+  * Reads port `<<reference>>`
+  * Interrupts `<<servo>>`
+|===
+
+Track a desired position
+
+'''
+
+[[set_state]]
+=== set_state (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `struct ::or::t3d::pos` `pos`: Position
+ ** `double` `x`
+ ** `double` `y`
+ ** `double` `z`
+
+ * `struct ::or::t3d::att` `att`: Orientation
+ ** `double` `qw`
+ ** `double` `qx`
+ ** `double` `qy`
+ ** `double` `qz`
+
+ * `struct ::or::t3d::vel` `vel`: Linear velocity
+ ** `double` `vx`
+ ** `double` `vy`
+ ** `double` `vz`
+
+ * `struct ::or::t3d::avel` `avel`: Angular velocity
+ ** `double` `wx`
+ ** `double` `wy`
+ ** `double` `wz`
+
+ * `struct ::or::t3d::acc` `acc`: Acceleration
+ ** `double` `ax`
+ ** `double` `ay`
+ ** `double` `az`
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * Interrupts `<<servo>>`
+|===
+
+Set the desired state
+
+'''
+
+[[set_position]]
+=== set_position (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `x`
+
+ * `double` `y`
+
+ * `double` `z`
+
+ * `double` `yaw`
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * Interrupts `<<servo>>`
+|===
+
+Set the desired position
+
+The controller will hover on the given position and heading, with a
+zero velocity.
+
+'''
+
+[[set_current_position]]
+=== set_current_position (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_input`
+
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * In task `<<main>>`
+  (frequency 1000.0 _Hz_)
+  * Reads port `<<state>>`
+  * Interrupts `<<servo>>`
+|===
+
+Set the desired position to the current state.
+
+The controller will hover on the position and heading currently given
+by the state contained in the port <<state>>, with a zero velocity.
+Note that <<state>> is only read once and the robot will not track
+changes in the state. See <<servo>> for an actual trajectory
+tracking.
+
+'''
+
+[[set_velocity]]
+=== set_velocity (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `x`
+
+ * `double` `y`
+
+ * `double` `z`
+
+ * `double` `yaw`
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * Interrupts `<<servo>>`
+|===
+
+Set the desired velocity
+
+The controller will try to reach the given velocity and heading
+angular velocity. Note that for safety reasons, a watchdog will
+trigger after 500ms and reset the target velocity to zero.
+
+'''
+
+[[stop]]
+=== stop (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * Interrupts `<<servo>>`
+|===
+
+Stop tracking a desired position
+
+'''
+
+[[set_wo_zero]]
+=== set_wo_zero (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `duration` (default `"2"`) Standstill acquisition time
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_geom`
+
+a|.Context
+[disc]
+  * In task `<<wo>>`
+  (frequency 100.0 _Hz_)
+  * Updates port `<<external_wrench>>`
+  * Interrupts `<<set_wo_zero>>`
+|===
+
+Compute wrench observer bias.
+
+'''
+
+[[log]]
+=== log (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `string<64>` `path` (default `"/tmp/nhfc.log"`) Log file name
+
+ * `unsigned long` `decimation` (default `"1"`) Reduced logging frequency
+
+a|.Throws
+[disc]
+ * `exception ::nhfc::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+|===
+
+Log state
+
+'''
+
+[[log_stop]]
+=== log_stop (function)
+
+
+Stop logging
+
+'''
+
+[[log_info]]
+=== log_info (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `unsigned long` `miss` Missed log entries
+
+ * `unsigned long` `total` Total log entries
+
+|===
+
+Show missed log entries
+
+'''
+
+== Tasks
+
+[[main]]
+=== main
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * Frequency 1000.0 _Hz_
+* Updates port `<<rotor_input>>`
+* Reads port `<<state>>`
+* Updates port `<<external_wrench>>`
+|===
+
+'''
+
+[[wo]]
+=== wo
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * Frequency 100.0 _Hz_
+* Reads port `<<rotor_measure>>`
+* Reads port `<<state>>`
+* Updates port `<<external_wrench>>`
+|===
+
+'''

@@ -1,0 +1,143 @@
+planner_configs:
+  planners_name: ["FMT", "Generator", "RRTstar", "RRT", "RandUPRRT", "R_SAFMT_NN", "R_SARRT", "R_SARRT_NN", "R_SARRTstar_NN", "R_SARRTstar", "SARRT", "SARRTstar", "SST", "SSTstar", "R_SASST", "R_SASSTstar", "TRRT"]
+
+  FMT:
+    type: geometric::FMT
+    num_samples: 5  # Nb of samples to consider in the FMT
+    use_k_nearest: False
+    radius_multiplier: 1.1
+    extended_fmt: True
+
+  Generator:
+    type: geometric::Generator
+    tl: 1.0  # Motion maximum local length added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    tf: 15.0  # Motion global length to export
+    nb_data: 10000 # Number of trajectories to be generated
+    max_filter: 10 # Maximum number of outlier filtering attempts
+
+  RRTstar:
+    type: geometric::RRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+    use_k_nearest: False
+    tree_pruning: False
+    informed_sampling: False
+    sample_rejection: False
+    new_state_rejection: False
+    use_admissible_heuristic: False
+    focus_search: False
+
+  RRT:
+    type: geometric::RRT
+    range: 1.0 # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    
+  RandUPRRT:
+    type: geometric::RandUPRRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    nb_particles: 20 # Number of RandUp particles
+    padding: 0.0 #Padding value for the apsilon-randUp mechanism
+
+  R_SAFMT_NN:
+    type: geometric::R_SAFMT_NN
+    num_samples: 5  # Nb of samples to consider in the FMT
+    use_k_nearest: False
+    radius_multiplier: 1.1
+    extended_R_SAFMT_NN: True
+  
+  R_SARRT:
+    type: geometric::R_SARRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  
+  R_SARRT_NN:
+    type: geometric::R_SARRT_NN
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+
+  R_SARRTstar_NN:
+    type: geometric::R_SARRTstar_NN
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+    use_k_nearest: False
+    tree_pruning: False
+    informed_sampling: False
+    sample_rejection: False
+    new_state_rejection: False
+    use_admissible_heuristic: False
+    focus_search: False
+
+  R_SARRTstar:
+    type: geometric::R_SARRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+    use_k_nearest: False
+    tree_pruning: False
+    informed_sampling: False
+    sample_rejection: False
+    new_state_rejection: False
+    use_admissible_heuristic: False
+    focus_search: False
+  
+  SARRT:
+    type: geometric::SARRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+  
+  SARRTstar:
+    type: geometric::SARRTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default 1
+    use_k_nearest: False
+    tree_pruning: False
+    informed_sampling: False
+    sample_rejection: False
+    new_state_rejection: False
+    use_admissible_heuristic: False
+    focus_search: False
+
+  SST: 
+    type: geometric::SST
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    selection_radius: 0.5 # Selection radius (Quadrotor:3 Unicycle:0.5)
+    pruning_radius: 1 # Pruning radius (Quadrotor:5 Unicycle:1)
+  
+  SSTstar: 
+    type: geometric::SSTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    selection_radius: 0.5 # Selection radius (Quadrotor:3 Unicycle:0.5)
+    pruning_radius: 1 # Pruning radius (Quadrotor:5 Unicycle:1)
+    number_itartion: 5000 # Number of iteration of the initial SST instance
+    epsilon: 0.9 # Between 0 and 1, used to update next SST number of iterations
+
+  R_SASST:
+    type: geometric::R_SASST
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    selection_radius: 0.5 # Selection radius (Quadrotor:3 Unicycle:0.5)
+    pruning_radius: 1 # Pruning radius (Quadrotor:5 Unicycle:1)
+
+  R_SASSTstar: 
+    type: geometric::R_SASSTstar
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    selection_radius: 0.5 # Selection radius (Quadrotor:3 Unicycle:0.5)
+    pruning_radius: 1 # Pruning radius (Quadrotor:5 Unicycle:1)
+    number_itartion: 5000 # Number of iteration of the initial SST instance
+    epsilon: 0.9 # Between 0 and 1, used to update next SST number of iterations
+  
+  TRRT:
+    type: geometric::TRRT
+    range: 1.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    emp_change_factor: 0.5
+    init_temperature: 100
+    frontier_threshold: 0.0
+    frontier_node_ratio: 0.1

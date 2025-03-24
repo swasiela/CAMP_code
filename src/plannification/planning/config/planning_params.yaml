@@ -1,0 +1,51 @@
+planning_parameters:
+
+  # Files
+  cost_file: "src/results/cost.txt"
+  iterations_file: "src/results/iterations.txt"
+  profiling_file: "src/results/profiling.txt"
+  gains_file: "src/results/gains.txt"
+  traj_file: "src/results/robust_traj.txt"
+  post_process_file: "src/results/post_process.txt"
+
+  # Optimization objective
+  optimization_objective: KS_time #KS_time Length Sensi
+
+  #Time step (seconds) for planning and post_processing 
+  dt_planning: 0.05 # (genom) 0.005 !!! IMPORTANT !!! You must use your controller frequency as time step
+
+  # Type of robust collision
+  #   0 : collision with a sphere using the maximum uncertainty radii and the nearest obstacle !! CONSERVATIVE !! (see Thesis Appendix for proof) 
+  #   1 : (NOT SUPER TESTED) compute the robot AABB and create a new AABB scaled with the AABB uncertainty, ! WARNING! There seems to be a buffer effect somewhere, maybe in the dealloc of the collision shape in bullet !
+  #   2 : (RECOMMANDED) approximate the cube that enveloppe the original ellispoid by considering the maximum deviations in all directions of interest
+  tube_mode: 2 
+
+  #Simulation
+  simulate_only: False
+  N_simu: 30 
+
+  # Visualization
+  visualize_tree: True # WARNING !! May slow down the computation and required a GPU.
+  camera_params: [3.0, 90.0, -65.0, 3.0, 0.0, 3.5] # distance,  yaw,  pitch, target_pose
+
+  #Neural network
+  test_NN: True
+
+  #Planner 
+  plan_time: 120 #seconds
+  cost_threshold: 0.0 # set according to your scenario, SET TO 0.0 IF YOU DON'T WANT TO USE THIS 
+  max_planning_attempt: 0
+  planner_id: R_SARRT_NN # FMT Generator RRT RRTstar RandUPRRT R_SARRTstar R_SARRTstar_NN R_SARRT R_SARRT_NN R_SAFMT_NN SARRT SARRTstar SST SSTstar R_SASST R_SASSTstar TRRT
+
+  # Post-processing
+  simplify: False # Simplify the solution before post_process
+  comparison: False
+  post_processing: "None" # Shortcut ExtendedShortcut NloptLocalopt STOMP NONE
+  stopping_condition: "Time" # Stopping criterion : 'Iter' 'Convergence' 'Time'
+  window_size: 5 # Window size for cost convergence criterion
+  threshold: 0.1 # Tolerance for cost convergence criterion (%)
+  max_iter: 720 # Max number of iteration
+  max_time: 400 # Max planning time allowed (s)
+  cost: "Accuracy" # Length Accuracy Sensi
+  opti_params: "Traj" # Traj Gains All
+  

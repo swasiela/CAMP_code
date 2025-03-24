@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- Main unicycle link -->
+<robot name="unicycle">
+
+    <link name="base_link">
+      <inertial>
+        <mass value="1." />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.015" ixy="0.0" ixz="0.0" iyy="0.015" iyz="0.0" izz="0.007" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robots/meshes/unicycle/ddr.obj"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+       <geometry>
+          <mesh filename="package://robots/meshes/unicycle/ddr.obj"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="world_link"/>
+
+    <joint 
+      name="world_body_joint"
+      type="fixed">
+      <parent
+        link="world_link" />
+      <child
+        link="base_link" />
+    </joint>
+
+</robot>

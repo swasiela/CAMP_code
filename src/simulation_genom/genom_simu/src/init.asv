@@ -1,0 +1,74 @@
+clear all;
+close all;
+clc;
+
+%% MANUAL PARAMETERS
+param.platform = {'erebia_simu'};  % 'qr', 'erebia', 'erebia_simu'
+
+param.simulator = 1;  % use mrsim (0) or gazebo (1)
+param.control.default = 1;  % default controller - 0: none (mpc), 1: nhfc, 2: uap
+
+param.state.tagodom = 0;  % enable tagodom (1) or not (0)
+param.state.pom = 1;  % enable pom (1) or not (0)
+param.state.estimator = 0;  % pom (0) or tagodom (1)
+
+param.joystick = 0;  % use joystick (1) or not (0)
+
+%%% Sensor parameters
+param.motor_fq = 50;  % frequency of reading motor data [Hz]
+param.mag = 0;  % use mag (1) or not (0)
+
+param.msg = 0; % pocolibs (0) or ros (1)
+
+%%% Use the electromagnet
+param.magnet = 0; % (0) don't use (1) use
+
+%% UAV PARAMETERS
+% Define param.sim according to which platform is used
+if startsWith(param.platform(1), 'erebia')
+    param.sim = 0;
+else
+    param.sim = 1;
+end
+
+% Compute number of UAVs
+param.Na = size(param.platform, 2);
+
+% Load parameters for each UAVs
+uavs = [];
+gs = [];
+addpath('params');
+for i = 1:param.Na
+    uavs = [uavs, feval(cell2mat(strcat('param_', param.platform(i))))];
+    gs = [gs, init_genom(uavs(i), param)];
+    % gs = [gs, init_test_arduino(uavs(i), param)];
+end
+
+% Convenience shortcut
+if param.Na == 1
+    g = gs;
+    uav = uavs;
+end
+
+%% LOCAL GENOMIX CLIENT
+try
+    % ------------------------------------------------- { Load Genomix client }
+    disp('Retrieve Genomix client...');
+    client = genomix.client('localhost');
+    if param.msg == 0
+        client.rpath([uav.openrobots_dir, '/lib/genom/pocolibs/plugins']);
+    else
+        client.rpath([uav.openrobots_dir, '/lib/genom/ros/plugins']);
+    end
+catch
+    disp('* No local genomix client launched!')
+end
+
+%% BATTERY
+if ~param.sim
+    disp('* Check Battery');
+    for i = 1:param.Na
+        batteryLevel = gs(i).rc.get_battery();
+        disp([' Battery level (', uavs(i).name, '): ', num2str(batteryLevel.result.battery.level)]);
+    end
+end

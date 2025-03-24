@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<robot name="world">
+  <link name="floor">
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="package://robots/meshes/env/corridor.obj" scale="1. 1. 1."/>  -->
+        <mesh filename="package://robots/meshes/env/LAAS_indoor_window.obj" scale="1. 1. 1."/> 
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+	 	    <!-- <mesh filename="package://robots/meshes/env/corridor.obj" scale="1. 1. 1."/> -->
+        <mesh filename="package://robots/meshes/env/LAAS_indoor_window.obj" scale="1. 1. 1."/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>

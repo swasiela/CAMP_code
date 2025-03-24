@@ -1,0 +1,11 @@
+post_processing_configs:
+  ExtendedShortcut:
+    sampling_method: gaussian # uniform gaussian 
+    radius_type: fixed # fixed adaptive
+    ball_radius: 0.1 # Radius of the ball used to sample around a state in all directions.
+    nb_in_ball: 1 # Number of samples in a ball around a state of a section
+    nb_update: 50 # The number of samples to perform before updating the radius
+  STOMP:
+    nb_rollout: 10 # Number of rollout
+    nb_iter_after_valid: 50 # Number of iteration for solution refinement. Total number of iterations that STOMP should continue optimizing an already valid solution
+    std_dev: 0.2 # Standard deviation for generating noisy parameters

@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="mrsim-quadrotor">
+    <link name="base">
+      <inertial>
+        <mass>1.113</mass>
+        <inertia>
+          <ixx>0.015</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.015</iyy><iyz>0</iyz>
+          <izz>0.007</izz>
+        </inertia>
+        <pose> 0.01 0.005 0 </pose>
+      </inertial>
+
+      <collision name="base">
+        <geometry>
+          <mesh><uri>../../../../robots/meshes/quadrotor/drone_genom.obj</uri></mesh>
+        </geometry>
+      </collision>
+
+      <visual name="body">
+        <geometry>
+          <mesh><uri>../../../../robots/meshes/quadrotor/drone_genom.obj</uri></mesh>
+        </geometry>
+      </visual>
+
+    </link>
+
+    <include>
+      <uri>model://mrsim-rotor</uri>
+      <name>rotor-1</name>
+      <pose>0.23 0 0 0 0 0</pose>
+    </include>
+    <joint name="rotor-1" type="revolute">
+      <parent>base</parent>
+      <child>rotor-1::propeller</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <include>
+      <uri>model://mrsim-rotor</uri>
+      <name>rotor-2</name>
+      <pose>0 0.23 0 0 0 0</pose>
+    </include>
+    <joint name="rotor-2" type="revolute">
+      <parent>base</parent>
+      <child>rotor-2::propeller</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <include>
+      <uri>model://mrsim-rotor</uri>
+      <name>rotor-3</name>
+      <pose>-0.23 0 0 0 0 0</pose>
+    </include>
+    <joint name="rotor-3" type="revolute">
+      <parent>base</parent>
+      <child>rotor-3::propeller</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <include>
+      <uri>model://mrsim-rotor</uri>
+      <name>rotor-4</name>
+      <pose>0 -0.23 0 0 0 0</pose>
+    </include>
+    <joint name="rotor-4" type="revolute">
+      <parent>base</parent>
+      <child>rotor-4::propeller</child>
+      <axis><xyz>0 0 1</xyz></axis>
+    </joint>
+
+    <plugin name="mrsim" filename="mrsim-gazebo.so">
+      <link>base</link>
+      <rotors>
+        <noise>0.0001</noise>
+        <cf>5.9e-4</cf>
+        <ct>1e-5</ct>
+        <rotor><joint spin="cw">rotor-1</joint></rotor>
+        <rotor><joint spin="ccw">rotor-2</joint></rotor>
+        <rotor><joint spin="cw">rotor-3</joint></rotor>
+        <rotor><joint spin="ccw">rotor-4</joint></rotor>
+      </rotors>
+    </plugin>
+
+    <plugin name='3dplot' filename='libLinkPlot3DPlugin.so'>
+      <frequency>100</frequency>
+      <plot>
+        <link>base</link>
+        <pose>0.0 0.0 0.0 0 0 0</pose> <!-- perche: 0.3535534483629909 0.3535534483629909 -0.0884 0 0 0 -->
+        <material>Gazebo/Blue</material>
+      </plot>
+    </plugin> 
+
+  </model>
+</sdf>

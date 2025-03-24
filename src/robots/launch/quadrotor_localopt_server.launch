@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="quadrotor_localopt_server" pkg="robots" type="quadrotor_localopt_server.py" respawn="false" output="screen"/>
+
+</launch>

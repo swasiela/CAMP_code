@@ -1,0 +1,54 @@
+robot_parameters:
+
+  robot_id: "unicycle"
+
+  # Robot representation
+  urdf: "src/robots/urdf/unicycle.urdf"
+
+  # Scene
+  scene: "src/robots/urdf/scene_unic.urdf"
+
+  # Trajectory type
+  traj: "Dubins" #Kinospline Dubins
+  v_norm: 1.0
+
+  # Integrator
+  integrator: "RK2" #Euler RK2 RK4
+  
+  # Controller gains
+  gains_0: [1.5, 0.2, 8.0] # 4.0 0.8 4.0 
+
+  #Inputs
+  inputs_max: [60,60] #[wr,wl]
+
+  # Model parameters
+  uncertain_params: [0.1, 0.4] # r b
+  delta_p: [0.03, 0.03] # 3% 3%
+  mass: 0.5 # robot mass
+
+  # Goal threshold to consider the goal reached
+  goal_threshold: 0.1 #(m) 
+
+  ## Translation
+  ws_pos_min_0: -10.0 # -3
+  ws_pos_max_0: 10.0 # 3.0 
+  ws_pos_min_1: -10 # -1.5  
+  ws_pos_max_1: 10 # 1.5
+
+  # The robot states configuration limits (q)
+  q_max: [5.0, 3.0, 3.1415] # x(m) y(m) yaw(rad)
+  q_min: [-5.0, -3.0, -3.1415] # x(m) y(m) yaw(rad)
+
+  # Kinospline Steering Method
+  # Limits of the Joints for the Kinosplines vmax, amax, jmax, smax, Rot(1.0 = True or 0.0 = False)
+  KS_max_0: [2.0, 0.5, 1.0, 1.0, 0.0]  # X 
+  KS_max_1: [2.0, 0.5, 1.0, 1.0, 0.0]  # Y 
+
+  # All desired state are in the format required by DFL controller (X Y Vx Vy Ax Ay)
+  # Underactuated system, controlled states are X and Y, Yaw is recovered from the dynamic
+  # Initial robot state
+  initial_state: [4.0, 2.0, -3.1415, 0.0, 0.0, 0.0] # Initial state of the body  
+  # initial_state: [0.0, 0.0, -3.1415, 0.0, 0.0, 0.0] # Initial state of the body  
+
+  # Goal states
+  goal_0: [-4.0, -1.5, -1.5, 0.0, 0.0, 0.0] # Kinospline : (X Y Vx Vy Ax Ay) Dubins : (X Y Yaw 0 0 0)

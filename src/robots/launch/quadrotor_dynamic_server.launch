@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="quadrotor_dynamic_server" pkg="robots" type="quadrotor_dynamic_server.py" respawn="false" output="screen"/>
+
+</launch>

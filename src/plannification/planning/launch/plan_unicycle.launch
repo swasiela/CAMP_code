@@ -1,0 +1,26 @@
+<launch>
+
+    <!-- The planning node -->
+    <node name="plan" pkg="planning" type="plan" respawn="false" output="screen">
+        <!-- Load planners parameters -->
+        <rosparam command="load" file="$(find planning)/config/planners_params.yaml"/>
+        <!-- Load planning parameters -->
+        <rosparam command="load" file="$(find planning)/config/planning_params.yaml"/>
+        <!-- Load post processing parameters -->
+        <rosparam command="load" file="$(find planning)/config/postprocess_params.yaml"/>
+        <!-- Load robot parameters -->
+        <rosparam command="load" file="$(find robots)/config/unicycle_params.yaml"/>
+        <!-- Load learning parameters -->
+        <rosparam command="load" file="$(find learning_sensitivity)/config/GRU_params_tl1.yaml"/>
+    </node>
+
+    <!-- The sensitivity server -->
+    <include file="$(find robots)/launch/unicycle_sensitivity_server.launch" />
+
+    <!-- The dynamic server -->
+    <include file="$(find robots)/launch/unicycle_dynamic_server.launch" />
+
+    <!-- The localopt server -->
+    <include file="$(find robots)/launch/unicycle_localopt_server.launch" />
+
+</launch>

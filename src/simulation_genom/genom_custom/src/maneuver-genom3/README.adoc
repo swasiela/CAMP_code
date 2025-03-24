@@ -1,0 +1,807 @@
+//
+// Copyright (c) 2016-2021 LAAS/CNRS
+// All rights reserved.
+//
+// Redistribution and use  in source  and binary  forms,  with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//   1. Redistributions of  source  code must retain the  above copyright
+//      notice and this list of conditions.
+//   2. Redistributions in binary form must reproduce the above copyright
+//      notice and  this list of  conditions in the  documentation and/or
+//      other materials provided with the distribution.
+//
+//                                      Anthony Mallet on Mon Aug 22 2016
+//
+
+
+// This file was generated from maneuver.gen by the skeleton
+// template. Manual changes should be preserved, although they should
+// rather be added to the "doc" attributes of the genom objects defined in
+// maneuver.gen.
+
+= maneuver component
+openrobots@laas.fr
+2.1
+:toc: left
+
+// fix default asciidoctor stylesheet issue #2407 and add hr clear rule
+ifdef::backend-html5[]
+[pass]
+++++
+<link rel="stylesheet" href="data:text/css,p{font-size: inherit !important}" >
+<link rel="stylesheet" href="data:text/css,hr{clear: both}" >
+++++
+endif::[]
+
+
+
+== Ports
+
+
+[[state]]
+=== state (in)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_pose_estimator::state` `state`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::pos_cov >` `pos_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::att_cov >` `att_cov`
+ *** `double` `cov[10]`
+ ** `optional< struct ::or::t3d::att_pos_cov >` `att_pos_cov`
+ *** `double` `cov[12]`
+ ** `optional< struct ::or::t3d::vel_cov >` `vel_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::avel_cov >` `avel_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::acc_cov >` `acc_cov`
+ *** `double` `cov[6]`
+ ** `optional< struct ::or::t3d::aacc_cov >` `aacc_cov`
+ *** `double` `cov[6]`
+
+|===
+
+'''
+
+[[desired]]
+=== desired (out)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `struct ::or_rigid_body::state` `desired`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::jerk >` `jerk`
+ *** `double` `jx`
+ *** `double` `jy`
+ *** `double` `jz`
+ ** `optional< struct ::or::t3d::snap >` `snap`
+ *** `double` `sx`
+ *** `double` `sy`
+ *** `double` `sz`
+
+|===
+
+'''
+
+[[horizon]]
+=== horizon (out)
+
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Data structure
+[disc]
+ * `sequence< struct ::or_rigid_body::state >` `horizon`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::jerk >` `jerk`
+ *** `double` `jx`
+ *** `double` `jy`
+ *** `double` `jz`
+ ** `optional< struct ::or::t3d::snap >` `snap`
+ *** `double` `sx`
+ *** `double` `sy`
+ *** `double` `sz`
+
+|===
+
+Moving horizon of the current motion.
+
+See <<set_horizon>> to configure this port.
+
+'''
+
+== Services
+
+[[set_bounds]]
+=== set_bounds (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `xmin`
+
+ * `double` `xmax`
+
+ * `double` `ymin`
+
+ * `double` `ymax`
+
+ * `double` `zmin`
+
+ * `double` `zmax`
+
+ * `double` `yawmin`
+
+ * `double` `yawmax`
+
+|===
+
+'''
+
+[[set_velocity_limit]]
+=== set_velocity_limit (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `v`
+
+ * `double` `w`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+|===
+
+'''
+
+[[set_acceleration_limit]]
+=== set_acceleration_limit (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `a`
+
+ * `double` `dw`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+|===
+
+'''
+
+[[set_jerk_limit]]
+=== set_jerk_limit (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `j`
+
+ * `double` `ddw`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+|===
+
+'''
+
+[[set_snap_limit]]
+=== set_snap_limit (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `s`
+
+ * `double` `dddw`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+|===
+
+'''
+
+[[get_limits]]
+=== get_limits (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `double` `xmin`
+
+ * `double` `xmax`
+
+ * `double` `ymin`
+
+ * `double` `ymax`
+
+ * `double` `zmin`
+
+ * `double` `zmax`
+
+ * `double` `yawmin`
+
+ * `double` `yawmax`
+
+ * `double` `v`
+
+ * `double` `w`
+
+ * `double` `a`
+
+ * `double` `dw`
+
+ * `double` `j`
+
+ * `double` `ddw`
+
+ * `double` `s`
+
+ * `double` `dddw`
+
+|===
+
+'''
+
+[[set_state]]
+=== set_state (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `x`
+
+ * `double` `y`
+
+ * `double` `z`
+
+ * `double` `yaw`
+
+|===
+
+Set initial planning position
+
+'''
+
+[[set_current_state]]
+=== set_current_state (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_nostate`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Reads port `<<state>>`
+|===
+
+Set initial planning position to current one
+
+'''
+
+[[take_off]]
+=== take_off (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `height`
+
+ * `double` `duration`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_nostate`
+
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Interrupts `<<take_off>>`
+  * Interrupts `<<goto>>`
+  * Interrupts `<<waypoint>>`
+  * Interrupts `<<replay>>`
+  * Interrupts `<<stop>>`
+|===
+
+Vertical take-off from current state
+
+'''
+
+[[goto]]
+=== goto (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `x`
+
+ * `double` `y`
+
+ * `double` `z`
+
+ * `double` `yaw`
+
+ * `double` `duration`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_nostate`
+
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Interrupts `<<take_off>>`
+  * Interrupts `<<goto>>`
+  * Interrupts `<<waypoint>>`
+  * Interrupts `<<replay>>`
+  * Interrupts `<<stop>>`
+|===
+
+Reach a given position from current state
+
+'''
+
+[[waypoint]]
+=== waypoint (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `x`
+
+ * `double` `y`
+
+ * `double` `z`
+
+ * `double` `yaw`
+
+ * `double` `vx`
+
+ * `double` `vy`
+
+ * `double` `vz`
+
+ * `double` `wz`
+
+ * `double` `ax`
+
+ * `double` `ay`
+
+ * `double` `az`
+
+ * `double` `duration`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_nostate`
+
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Interrupts `<<waypoint>>`
+  * Interrupts `<<stop>>`
+|===
+
+Push a given position to reach after last one
+
+'''
+
+[[velocity]]
+=== velocity (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `vx`
+
+ * `double` `vy`
+
+ * `double` `vz`
+
+ * `double` `wz`
+
+ * `double` `ax`
+
+ * `double` `ay`
+
+ * `double` `az`
+
+ * `double` `duration`
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * Interrupts `<<take_off>>`
+  * Interrupts `<<goto>>`
+  * Interrupts `<<replay>>`
+  * Interrupts `<<stop>>`
+|===
+
+Reach a desired velocity within a given duration
+
+'''
+
+[[replay]]
+=== replay (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `string<128>` `filename` (default `"maneuver.log"`) Log file name
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_nostate`
+
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Interrupts `<<take_off>>`
+  * Interrupts `<<goto>>`
+  * Interrupts `<<waypoint>>`
+  * Interrupts `<<replay>>`
+  * Interrupts `<<stop>>`
+|===
+
+Replay a trajectory log file
+
+'''
+
+[[wait]]
+=== wait (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * In task `<<plan>>`
+|===
+
+Wait until last waypoint/goto point is reached
+
+'''
+
+[[stop]]
+=== stop (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_limits`
+
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<plan>>`
+  * Interrupts `<<take_off>>`
+  * Interrupts `<<goto>>`
+  * Interrupts `<<waypoint>>`
+  * Interrupts `<<replay>>`
+|===
+
+Cancel any motion and bring the velocity to zero
+
+'''
+
+[[get_reference]]
+=== get_reference (attribute)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `struct ::or_rigid_body::state` `reference`
+ ** `struct ::or::time::ts` `ts`
+ *** `long` `sec`
+ *** `long` `nsec`
+ ** `boolean` `intrinsic`
+ ** `optional< struct ::or::t3d::pos >` `pos`
+ *** `double` `x`
+ *** `double` `y`
+ *** `double` `z`
+ ** `optional< struct ::or::t3d::att >` `att`
+ *** `double` `qw`
+ *** `double` `qx`
+ *** `double` `qy`
+ *** `double` `qz`
+ ** `optional< struct ::or::t3d::vel >` `vel`
+ *** `double` `vx`
+ *** `double` `vy`
+ *** `double` `vz`
+ ** `optional< struct ::or::t3d::avel >` `avel`
+ *** `double` `wx`
+ *** `double` `wy`
+ *** `double` `wz`
+ ** `optional< struct ::or::t3d::acc >` `acc`
+ *** `double` `ax`
+ *** `double` `ay`
+ *** `double` `az`
+ ** `optional< struct ::or::t3d::aacc >` `aacc`
+ *** `double` `awx`
+ *** `double` `awy`
+ *** `double` `awz`
+ ** `optional< struct ::or::t3d::jerk >` `jerk`
+ *** `double` `jx`
+ *** `double` `jy`
+ *** `double` `jz`
+ ** `optional< struct ::or::t3d::snap >` `snap`
+ *** `double` `sx`
+ *** `double` `sy`
+ *** `double` `sz`
+
+|===
+
+'''
+
+[[set_horizon]]
+=== set_horizon (activity)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `double` `horizon` Amount of time (s)
+
+ * `unsigned long` `samples` Number of samples
+
+a|.Outputs
+[disc]
+ * `double` `horizon` Amount of time (s)
+
+ * `unsigned long` `samples` Number of samples
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+a|.Context
+[disc]
+  * In task `<<exec>>`
+  (frequency 200.0 _Hz_)
+  * Updates port `<<horizon>>`
+|===
+
+Set sampling rate and duration of horizon port
+
+This service activates the publication of the `horizon` port.
+The input parameters are adapted to match the internal
+sampling rate of trajectories, but are guaranteed to be at
+least as big as requested. The actual values are returned as
+output parameters
+
+Passing 0 as the number of samples uses the internal
+sampling rate. Passing 0 for both duration and number of
+samples disables publishing of the `horizon` port.
+
+'''
+
+[[log]]
+=== log (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Inputs
+[disc]
+ * `string<64>` `path` (default `"/tmp/maneuver.log"`) Log file name
+
+ * `unsigned long` `decimation` (default `"1"`) Reduced logging frequency
+
+a|.Throws
+[disc]
+ * `exception ::maneuver::e_sys`
+ ** `short` `code`
+ ** `string<128>` `what`
+
+|===
+
+Log state
+
+'''
+
+[[log_stop]]
+=== log_stop (function)
+
+
+Stop logging
+
+'''
+
+[[log_info]]
+=== log_info (function)
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Outputs
+[disc]
+ * `unsigned long` `miss` Missed log entries
+
+ * `unsigned long` `total` Total log entries
+
+|===
+
+Show missed log entries
+
+'''
+
+== Tasks
+
+[[plan]]
+=== plan
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * Free running
+|===
+
+'''
+
+[[exec]]
+=== exec
+
+[role="small", width="50%", float="right", cols="1"]
+|===
+a|.Context
+[disc]
+  * Frequency 200.0 _Hz_
+* Updates port `<<horizon>>`
+* Updates port `<<desired>>`
+* Updates port `<<horizon>>`
+|===
+
+'''

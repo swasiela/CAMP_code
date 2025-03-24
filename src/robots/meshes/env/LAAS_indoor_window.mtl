@@ -1,0 +1,46 @@
+# Blender MTL File: 'LAAS_indoor_window.blend'
+# Material Count: 4
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl Wall.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_BaseColor.png
+map_Ns /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_Roughness.png
+
+newmtl Wall.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_BaseColor.png
+map_Ns /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_Roughness.png
+
+newmtl Wall.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_BaseColor.png
+map_Ns /home/swasiela/CAMP/blender_model/Textures/WoodenPlanks02_MR_2K/WoodenPlanks02_2K_Roughness.png

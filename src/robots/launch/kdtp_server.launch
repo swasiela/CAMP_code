@@ -1,0 +1,8 @@
+<launch>
+
+    <node name="kdtp_server" pkg="robots" type="kdtp_server" respawn="false" output="screen">
+        <!-- Load robot parameters -->
+        <rosparam command="load" file="$(find robots)/config/quadrotor_params.yaml"/>
+    </node>
+
+</launch>

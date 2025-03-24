@@ -1,0 +1,17 @@
+bullet==2.2.0
+clang==14.0
+jitcode==1.7.0
+jitcxde-common==1.5.3
+lightning==2.2.1
+nlopt==2.7.0
+numpy==1.23.1
+optuna==3.6.0
+pandas==1.5.1
+pybullet==3.2.5
+scipy==1.8.1
+seaborn==0.12.1
+symengine==0.7.2
+sympy==1.12
+tensorboard==2.11.0
+torch==2.2.1
+utils==1.0.1

@@ -1,0 +1,85 @@
+robot_parameters:
+
+  # WARNING !!! This setup is for a quadrotor/lee controller pair with kinospline steering method 
+
+  # Robot name
+  robot_id: "quadrotor"
+
+  # Robot representation
+  urdf: "src/robots/urdf/quadrotor.urdf"
+
+  # Scene
+  scene: "src/robots/urdf/scene_quad.urdf"
+
+  # Trajectory type
+  traj: "Kinospline" #Kinospline
+  
+  # Integrator
+  integrator: "RK2" #Euler RK2 RK4
+
+  # Controller gains RK2 or RK4 integrator
+  gains_0: [20.0, 20.0, 25.0] #kx
+  gains_1: [9.0, 9.0, 12.0] #kv
+  gains_2: [0.0, 0.0, 0.0]  #ki
+  gains_3: [4.6, 4.6, 0.8] #kR
+  gains_4: [0.5, 0.5, 0.08] #kOmega
+
+  # Gains Euler integrator
+  # gains_0: [9.0, 9.0, 12.0] #kx
+  # gains_1: [7.0, 7.0, 10.0] #kv
+  # gains_2: [0.0, 0.0, 0.0]  #ki
+  # gains_3: [4.7, 4.7, 0.8] #kR
+  # gains_4: [0.46, 0.46, 0.08] #kOmega
+
+  #Inputs
+  inputs_max: [20000,20000,20000,20000] #[u1,u2,u3,u4]
+
+  # Model parameters
+  uncertain_params: [1.113, 0.0, 0.0, 0.015, 0.015, 0.007] # mass gx gy Jx Jy Jz
+  delta_p: [0.07, 0.03, 0.03, 0.1, 0.1, 0.1] # 7% 3cm 3cm 10% 10% 10%
+  mass: 1.113 # robot mass
+
+  # Goal threshold to consider the goal reached
+  goal_threshold: 0.0 
+
+  # Kinospline Steering Method
+  # The controllable robot states configuration limits (q)
+  q_max: [2.5, 2.0, 2.5, 3.1415] # x(m) y(m) z(m) yaw(rad)
+  q_min: [-2.5, -2.0, 0.0, -3.1415] # x(m) y(m) z(m) yaw(rad)
+  # The controllable robot states kinodynamic limits (qdot qddot etc...) for the Kinosplines: vmax, amax, jmax, smax, Rot(1.0 = True or 0.0 = False)
+  KS_max_0: [5.0, 1.5, 15.0, 30.0, 0.0] # X 
+  KS_max_1: [5.0, 1.5, 15.0, 30.0, 0.0]  # Y
+  KS_max_2: [5.0, 1.5, 15.0, 30.0, 0.0]  # Z
+  KS_max_3: [0.5, 0.25, 8.0, 16.0, 1.0]  # Yaw
+
+  # Plan for the robot perch end effector !!!!!!
+  eef_planning: False 
+  perch_length: 0.5 # (m)
+  angle_perche: 0.785398 # (rad) Relative to body frame 
+  perche_altitude: -0.0875 # (m) Relative to body frame 
+  perch_planning_relative_vel_val: 0.5
+
+  # All desired state are in the format required by Lee's controller (X Y Z Yaw Vx Vy Vz Wyaw Ax Ay wyawdot)
+  # Underactuated system, controlled states are X, Y, Z and Yaw. Roll and Pitch are recovered from the dynamic
+  # Initial robot desired state
+  # initial_state: [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial desired state
+  # goal_0: [0.0, 0.0, 1.0, 1.45, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+
+  # Corridor Pilar
+  # initial_state: [-4.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial desired state
+  # goal_0: [1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+
+  # Corridor
+  # initial_state: [-4.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial desired state
+  # goal_0: [4.5, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+
+  # Window
+  initial_state: [-2.0, -1.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial desired state
+  goal_0: [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+
+  # 4 RINGS OPTI
+  # goal_0: [0.0, -0.8, 1.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+  # goal_1: [2.6, 0.2, 1.2, 1.5708, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+  # goal_2: [-0.5, 1.1, 1.3, 3.1415, 0.0, 0.0, 0.0, 0.0, -0.00, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+  # goal_3: [-2.37, 0.75, 1.4, -1.5708, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)
+  # goal_4: [-2.0,-1.0,1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # X Y Z Yaw(rad) Vx Vy Vz Wyaw(rad/s) Ax Ay Az wyawdot(rad/s²)

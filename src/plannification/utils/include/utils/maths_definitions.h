@@ -1,0 +1,7 @@
+#ifndef MATHS_DEFINITIONS_H
+#define MATHS_DEFINITIONS_H
+
+#define DEG2RAD (M_PIl/180.)
+#define RAD2DEG (180./M_PIl)
+
+#endif // MATHS_DEFINITIONS_H

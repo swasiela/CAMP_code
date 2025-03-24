@@ -1,0 +1,125 @@
+<sdf version='1.7'>
+  <world name='mrsim'>
+
+    <!-- A gazebo links attacher -->
+    <plugin name="ros_link_attacher_plugin" filename="libgazebo_ros_link_attacher.so"/>
+
+    <physics type='ode'>
+      <max_step_size>0.002000</max_step_size>
+      <real_time_factor>1.000000</real_time_factor>
+      <real_time_update_rate>500.000000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
+      <magnetic_field>23.816e-6 -0.41e-6 -39.829e-6</magnetic_field>
+    </physics>
+
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+
+    <model name="LAAS_indoor">
+      <link name="cage_link">
+        <pose>0 0 0 0 0 0</pose>
+        <collision name="cage_collision">
+          <geometry>
+            <mesh>
+              <uri>../../../robots/meshes/env/LAAS_indoor_window.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="cage">
+          <geometry>
+            <mesh>
+              <uri>../../../robots/meshes/env/LAAS_indoor_window.obj</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <cast_shadows>false</cast_shadows>
+        </visual>
+      </link>
+      <static>true</static>
+    </model> 
+
+    <!-- A Quadrotor-->
+    <model name="quad">
+        <pose>-1.0 0.0 0.2 0 0 0.0</pose>
+        <include>
+          <uri>model://mrsim-quadrotor</uri>
+          <name>quad</name>
+        </include>
+    </model>
+
+    <plugin name='optitrack' filename='optitrack-gazebo.so'>
+      <hz>1000</hz>
+      <port>1509</port>
+      <publish>
+        <link>quad::base</link>
+        <name>quadrotor</name>
+      </publish>
+    </plugin>
+   
+  </world>
+</sdf>

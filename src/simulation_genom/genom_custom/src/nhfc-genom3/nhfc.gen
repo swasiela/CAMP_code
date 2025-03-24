@@ -1,0 +1,405 @@
+/*/
+ * Copyright (c) 2015-2023 LAAS/CNRS
+ * All rights reserved.
+ *
+ * Redistribution and use  in source  and binary  forms,  with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *   1. Redistributions of  source  code must retain the  above copyright
+ *      notice and this list of conditions.
+ *   2. Redistributions in binary form must reproduce the above copyright
+ *      notice and  this list of  conditions in the  documentation and/or
+ *      other materials provided with the distribution.
+ *
+ *					Anthony Mallet on Tue Aug 11 2015
+ */
+#pragma require "openrobots2-idl >= 2.0"
+
+#include "or/pose/pose_estimator.gen"
+#include "or/pose/rigid_body.gen"
+#include "or/pose/wrench_estimator.gen"
+#include "or/robot/rotorcraft.gen"
+
+component nhfc {
+  version		"2.3";
+  email			"openrobots@laas.fr";
+  lang			"c";
+  require		"genom3 >= 2.99.26";
+  codels-require	"eigen3";
+
+  uses		or_rotorcraft, or_pose_estimator;
+  provides	or_wrench_estimator;
+
+  port in	or_pose_estimator::state state;
+  port in	or_rigid_body::state reference;
+
+  port out	or_wrench_estimator::state external_wrench;
+
+  exception e_input, e_geom;
+  exception e_sys { short code; string<128> what; };
+  exception e_inval { string<128> what; };
+
+  native log_s;
+
+  enum attitude_control_mode {
+    full_attitude,
+    tilt_prioritized
+  };
+
+  ids {
+    struct body_s {
+      double G[6 * or_rotorcraft::max_rotors]; /* velocities^2 to wrench */
+      double iG[or_rotorcraft::max_rotors * 6]; /* wrench to velocities^2 */
+
+      double J[3 * 3]; /* inertia matrix */
+      double mass;
+
+      unsigned short rotors;
+      double wmin, wmax;
+      double thrust_min[3], thrust_max[3];
+
+      boolean init; /* true when data was set */
+    } body;
+
+    struct servo_s {
+      struct sat_s { double x, v, ix; } sat;
+
+      struct gain_s {
+        double Kpxy, Kpz, Kqxy, Kqz, Kvxy, Kvz, Kwxy, Kwz;
+        double Kixy, Kiz;
+      } gain;
+
+      attitude_control_mode att_mode;
+
+      double ramp;
+      double scale;
+
+      struct emerg_s {
+        double descent;
+        double dx, dq, dv, dw;
+      } emerg;
+    } servo;
+
+    struct af_s {
+      boolean enable;
+
+      double mass;	/* apparent mass */
+      double B[6];	/* apparent damping */
+      double K[6];	/* apparent sping stiffness */
+      double J[3 * 3];	/* apparent inertia matrix */
+
+      or::rb3d::force force;
+      or::rb3d::torque torque;
+    } af;
+
+    or_rigid_body::state reference;
+    or_rigid_body::state desired;
+
+    struct wo_s {
+      double K[6];	/* observer gains */
+
+      double bias[6];	/* bias */
+    } wo;
+
+    /* logging */
+    log_s log;
+  };
+
+  attribute set_saturation(in servo.sat);
+  attribute set_servo_gain(in servo.gain);
+  attribute set_control_mode(
+    in servo.att_mode = tilt_prioritized: "Attitude tracking control law") {
+    doc "Select attitude tracking control law.";
+    doc "";
+    doc "With `tilt_prioritized`, attitude error is split into a";
+    doc "reduced attitude error, which describes the misalignment of";
+    doc "the thrust direction, and a yaw error, which describes the";
+    doc "heading orientation error. This is the default.";
+    doc "";
+    doc "With `full_attitude`, a conventional controller, based on the full";
+    doc "attitude error, is used.";
+  };
+  attribute set_wlimit(
+    in body.wmin =: "Minimum propeller velocity",
+    in body.wmax =: "Maximum propeller velocity") {
+    validate nhfc_set_wlimit(local in wmin, local in wmax, inout body);
+  };
+  attribute set_mass(in body.mass) {
+    validate nhfc_change_mass(in mass, inout body);
+  };
+  attribute set_geom(
+    in body.mass =: "Mass (kg)",
+    in body.G =: "Mapping from propellers velocity^2 to wrench",
+    in body.J =: "Inertia matrix") {
+    doc "Set mass, allocation matrix and inertia tensor.";
+    doc "";
+    doc "This is a generic function for setting the geometric parameters of";
+    doc "the controlled robot. See <<set_gtmrp_geom>> for a specialized";
+    doc "function for tilted multi rotors robots.";
+
+    validate nhfc_set_geom(in G, inout body);
+  };
+  function set_gtmrp_geom(
+    in unsigned short rotors = 4 : "Number of rotors",
+    in double cx = 0. : "X position of center of rotors wrt center of mass (m)",
+    in double cy = 0. : "Y position of center of rotors wrt center of mass (m)",
+    in double cz = 0. : "Z position of center of rotors wrt center of mass (m)",
+    in double armlen = 0.23 : "Distance of rotors to the center (m)",
+    in double mass = 1.28 : "Total mass (kg)",
+    in double mbodyw = 0.11 : "Main mass body width (m)",
+    in double mbodyh = 0.17 : "Main mass body height (m)",
+    in double mmotor = 0.07 : "Motor mass (kg)",
+    in double rx = 0 : "X rotation of the first rotor thrust vector (deg)",
+    in double ry = 0 : "Y rotation of the first rotor thrust vector (deg)",
+    in short rz = 1 : "Z spin direction of the first rotor (1: ccw, -1: cw)",
+    in double cf = 6.5e-4 : "Propeller thrust coefficient (N.s²)",
+    in double ct = 1e-5 : "Propeller torque coefficient (N.m.s²)") {
+    doc "Compute allocation matrix and inertia tensor for tilt rotors robots.";
+    doc "";
+    doc "Generically Tilted Multi-Rotor Platforms (GTMRP) are made of a set";
+    doc "of rotors evenly distributed in a horizontal plane. The rotors are";
+    doc "tilted around an axis lying in the plane, all by the same angle but";
+    doc "with alternating signs on the X axis. The spinning direction is also";
+    doc "alternating.";
+    doc "";
+    doc "This function is a specialization of the more generic <<set_geom>>.";
+
+    codel nhfc_set_gtmrp_geom(in rotors, in cx, in cy, in cz, in armlen,
+                              in mass, in mbodyw, in mbodyh, in mmotor,
+                              in rx, in ry, in rz, in cf, in ct,
+                              out body);
+
+    throw e_inval;
+  };
+  attribute set_emerg(in servo.emerg = {
+    .descent = 0.1 : "Vertical acceleration for emergency descent (m/s²)",
+    .dx = 0.05 : "Position uncertainty threshold (m)",
+    .dq = 5 : "Attitude uncertainty threshold (deg)",
+    .dv = 0.2 : "Linear velocity uncertainty threshold (m/s)",
+    .dq = 20 : "Angular velocity uncertainty threshold (deg/s)" }) {
+    doc "Set thresholds for emergency descent.";
+    doc "";
+    doc "`dx`, `dq`, `dv` and `dw` represent the maximum uncertainty tolerated";
+    doc "in the input <<state>> for position (`dx`), orientation (`dq`),";
+    doc "linear velocity (`dv`) and angular velocity (`dw`), measured as 3";
+    doc "times the standard deviation.";
+    doc "By default, `dx` is 5cm, `dq` is 5⁰, `dv` is 20cm/s and `dw` 20⁰/s.";
+    doc "Beyond that threshold, an emergency descent is started.";
+    doc "";
+    doc "As long as the emergency descent is active, the position error or";
+    doc "linear velocity error are cancelled (i.e. the desired roll and pitch";
+    doc "are set to 0) and a vertical acceleration of `descent` (by default";
+    doc "-0.1 m/s²) is requested. The descent is based on the mass only,";
+    doc "with no feedback, as the state is considered invalid. If the";
+    doc "orientation is invalid in the <<state>>, then no control on the";
+    doc "attitude is possible and the stability is not guaranteed ...";
+
+    validate nhfc_set_emerg(local inout emerg);
+  };
+  attribute set_wo_gains(in wo.K =: "Wrench observer gains");
+
+  attribute set_af_parameters(
+    in af.mass =: "Apparent mass",
+    in af.B =: "Apparent damping",
+    in af.K =: "Apparent sprinf stiffness",
+    in af.J =: "Apparent inertia matrix") {
+    validate nhfc_set_af_parameters(local in J);
+  };
+
+  attribute set_af_wrench(in af.force, in af.torque);
+  attribute set_af_enable(in af.enable) {
+    validate nhfc_set_af_enable(local in enable, in af, in desired,
+                                ids out reference);
+  };
+
+  attribute get_servo_parameters(out servo);
+  attribute get_body_parameters(out body);
+  attribute get_reference(out reference);
+  attribute get_wo_parameters(out wo);
+  attribute get_af_parameters(out af);
+
+  const unsigned short control_period_ms = 1;
+
+  task main {
+    period control_period_ms ms;
+
+    codel<start> nhfc_main_start(out ::ids, out rotor_input)
+      yield init;
+    codel<init> nhfc_main_init(ids in reference, in body, in state,
+                               out rotor_input)
+      yield pause::init, control;
+
+    codel<control> nhfc_main_control(in body, inout servo, inout af,
+                                     in state, in external_wrench,
+                                     ids inout reference, inout desired,
+                                     inout log, out rotor_input)
+      yield pause::control, emergency;
+    codel<emergency> nhfc_main_emergency(in body, inout servo, inout af,
+                                         in state, in external_wrench,
+                                         ids inout reference, inout desired,
+                                         inout log, out rotor_input)
+      yield pause::emergency, control;
+
+    codel<stop> nhfc_main_stop(out rotor_input)
+      yield ether;
+  };
+
+
+  /* --- control ----------------------------------------------------------- */
+
+  activity servo() {
+    doc		"Track a desired position";
+    task	main;
+
+    validate nhfc_check_geom(in body.init);
+
+    codel<start> nhfc_servo_main(port in reference::in, ids out reference)
+      yield pause::start, ether;
+
+    interrupt servo;
+    throw e_input, e_geom;
+  };
+
+  function set_state(
+    in or::t3d::pos pos =: "Position",
+    in or::t3d::att att =: "Orientation",
+    in or::t3d::vel vel =: "Linear velocity",
+    in or::t3d::avel avel =: "Angular velocity",
+    in or::t3d::acc acc =: "Acceleration") {
+    doc		"Set the desired state";
+
+    validate nhfc_check_geom(in body.init);
+
+    codel nhfc_set_state(in pos, in att, in vel, in avel, in acc,
+                         ids out reference);
+
+    interrupt servo;
+    throw e_geom;
+  };
+
+  function set_position(
+    in double x, in double y, in double z, in double yaw) {
+    doc "Set the desired position";
+    doc "";
+    doc "The controller will hover on the given position and heading, with a";
+    doc "zero velocity.";
+
+    validate nhfc_check_geom(in body.init);
+
+    codel nhfc_set_position(in x, in y, in z, in yaw, ids out reference);
+
+    interrupt servo;
+    throw e_geom;
+  };
+
+  activity set_current_position() {
+    doc "Set the desired position to the current state.";
+    doc "";
+    doc "The controller will hover on the position and heading currently given";
+    doc "by the state contained in the port <<state>>, with a zero velocity.";
+    doc "Note that <<state>> is only read once and the robot will not track";
+    doc "changes in the state. See <<servo>> for an actual trajectory";
+    doc "tracking.";
+
+    task	main;
+
+    validate nhfc_check_geom(in body.init);
+
+    codel<start> nhfc_set_current_position(in state, ids out reference)
+      yield ether;
+
+    interrupt servo;
+    throw e_input, e_geom;
+  };
+
+  function set_velocity(
+    in double x, in double y, in double z, in double yaw) {
+    doc "Set the desired velocity";
+    doc "";
+    doc "The controller will try to reach the given velocity and heading";
+    doc "angular velocity. Note that for safety reasons, a watchdog will";
+    doc "trigger after 500ms and reset the target velocity to zero.";
+
+    validate nhfc_check_geom(in body.init);
+
+    codel nhfc_set_velocity(in x, in y, in z, in yaw, ids out reference);
+
+    interrupt servo;
+    throw e_geom;
+  };
+
+  function stop() {
+    doc		"Stop tracking a desired position";
+
+    codel nhfc_servo_stop(ids out reference);
+
+    interrupt servo;
+  };
+
+
+  /* --- wrench observer --------------------------------------------------- */
+
+  const unsigned short wo_period_ms = 10;
+
+  task wo {
+    period wo_period_ms ms;
+
+    codel<start> nhfc_wo_start(out ::ids, out external_wrench)
+      yield main;
+    codel<main> nhfc_wo_main(in body, in wo, in state, in rotor_measure,
+                             out external_wrench)
+      yield pause::main, stop;
+
+    codel<stop> nhfc_wo_stop(inout ::ids)
+      yield ether;
+  };
+
+  activity set_wo_zero(
+    in double duration = 2.: "Standstill acquisition time") {
+    doc "Compute wrench observer bias.";
+
+    task wo;
+
+    local double accum[6];
+    local unsigned long n;
+
+    validate nhfc_check_geom(in body.init);
+
+    codel<start> nhfc_wo_zero_start(out accum, out n)
+      yield collect;
+    codel<collect> nhfc_wo_zero_collect(in duration, in external_wrench,
+                                        inout accum, inout n)
+      yield pause::collect, main;
+    codel<main> nhfc_wo_zero_main(in accum, in n, inout wo.bias)
+      yield ether;
+
+    interrupt set_wo_zero;
+    throw e_geom;
+  };
+
+
+  /* --- logging ----------------------------------------------------------- */
+
+  function log(in string<64> path = "/tmp/nhfc.log": "Log file name",
+               in unsigned long decimation = 1: "Reduced logging frequency") {
+    doc		"Log state";
+
+    codel nhfc_log(in path, in decimation, inout log);
+
+    throw e_sys;
+  };
+
+  function log_stop() {
+    doc		"Stop logging";
+
+    codel nhfc_log_stop(out log);
+  };
+
+  function log_info(out unsigned long miss = :"Missed log entries",
+                    out unsigned long total = :"Total log entries") {
+    doc		"Show missed log entries";
+
+    codel nhfc_log_info(in log, out miss, out total);
+  };
+};
